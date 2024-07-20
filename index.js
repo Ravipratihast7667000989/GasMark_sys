@@ -9,7 +9,7 @@ const PORT = process.env.PORT||4000
  app.use(bodyParser.urlencoded({extended : false}));
  app.use(bodyParser.json());
  app.use(cors());
-mongooes.connect("mongodb://localhost:27017/GasMark").then( function(){
+mongooes.connect("mongodb+srv://ravipratihast71:LCtQ1SB82Dr5ITu3@cluster0.hkwcuwh.mongodb.net/GasMark").then( function(){
     console.log("db connected");
 
    
@@ -61,7 +61,9 @@ app.post("/post",async(req,res)=>{
     //consumer_id:req.body. consumer_id,
    // knowlegement_number:req.body.knowlegement_number,
    // dateandtime:req.body.dateandtime,
-   // imageurl:req.file.filename,
+   // imageurl:req.file.filename,  
+
+   //
 
     });
     const val = await data.save();
