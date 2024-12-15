@@ -1,15 +1,20 @@
-const multer = require('multer')
+
+
+// ("mongodb+srv://ravipratihast71:LCtQ1SB82Dr5ITu3@cluster0.hkwcuwh.mongodb.net/GasMark_database")
+  
+
+ const multer = require('multer')
 const  express = require('express');
 const cors = require('cors');
 const mongooes = require('mongoose'); 
  const bodyParser = require('body-parser');
 const { Db } = require('mongodb');
 const app = express()
-const PORT = process.env.PORT||4000
+const PORT = process.env.PORT||9000
  app.use(bodyParser.urlencoded({extended : false}));
  app.use(bodyParser.json());
  app.use(cors());
-mongooes.connect("mongodb+srv://ravipratihast71:LCtQ1SB82Dr5ITu3@cluster0.hkwcuwh.mongodb.net/GasMark").then( function(){
+mongooes.connect("mongodb+srv://ravipratihast71:LCtQ1SB82Dr5ITu3@cluster0.hkwcuwh.mongodb.net/GasMark_DB").then( function(){
     console.log("db connected");
 
    
@@ -34,6 +39,8 @@ const newConnectionSchema ={
     agency:String,
     nationality:String,
     cylindertype:String,
+    imageurl:String,
+    
     
    
    
@@ -43,7 +50,7 @@ const newconnection = mongooes.model("newconnection",newConnectionSchema);
 
  
 // insert data
-app.post("/post",async(req,res)=>{
+app.post("/post", upload.single('image') ,async(req,res)=>{
    
     const data = new newconnection({
     firstname:req.body.firstname,
@@ -58,10 +65,9 @@ app.post("/post",async(req,res)=>{
     agency:req.body.agency,
     nationality:req.body.nationality,
     cylindertype:req.body.cylindertype,
-    //consumer_id:req.body. consumer_id,
-   // knowlegement_number:req.body.knowlegement_number,
-   // dateandtime:req.body.dateandtime,
-   // imageurl:req.file.filename,  
+    imageurl:req.file.filename,
+ 
+
 
    //
 
@@ -118,10 +124,16 @@ app.put("/booking/:_id",async(req,res)=>{
 });
 
 
-    app.get('/detsils', async function(req,res){
-        var getinfo= await newconnection.find();
+    app.get('/details/:firstname', async function(req,res){
+        var getinfo= await newconnection.find({firstname:req.params.firstname});
         res.json(getinfo);
+
+    });
         
+        app.get('/details', async function(req,res){
+            var getinfo= await newconnection.find();
+            res.json(getinfo);
+
 
     });
     //delete api
@@ -151,7 +163,7 @@ const storage = multer.diskStorage({
         cb(null,Date.now() +'__' + file.originalname);
     },
 });
-const upload= multer({storage:storage});
+const upload= multer({storage});
 
 
 
